@@ -24,7 +24,35 @@ public:
 
 		int max = 0;
 		stack<int> incSeq;
+		incSeq.push(-1);
 		for (int i=0; i<raws; i++) {
+			incSeq.push(0);
+			for (int j=1; j<cols; j++) {
+				int top = incSeq.top();
+				if (table[i][j] > table[i][top])
+					incSeq.push(j);
+				else {
+					do {
+						incSeq.pop();
+						int temp = (j - incSeq.top() - 1) * table[i][top];
+						if (temp > max)
+							max = temp;
+						top = incSeq.top();
+					} while (incSeq.size()>1 && table[i][top] >= table[i][j]);
+
+					incSeq.push(j);
+				}
+			}
+
+			while (incSeq.size() > 1) {
+				int top = incSeq.top();
+				incSeq.pop();
+				int temp = (cols-incSeq.top()-1) * table[i][top];
+				if (temp > max)
+					max = temp;
+			}
 		}
+
+		return max;
     }
 };
